@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="daily_sales_report" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <parameter name="FROM_DATE" class="java.lang.String"/>
+    <parameter name="TO_DATE" class="java.lang.String"/>
+
+    <queryString>
+        <![CDATA[
+        SELECT DATE_FORMAT(order_date, '%Y-%m-%d') AS sale_date,
+               COUNT(order_id) AS total_orders,
+               SUM(total) AS daily_revenue,
+               AVG(total) AS avg_order_val
+        FROM sales_order
+        WHERE status = 'Completed'
+          AND ($P{FROM_DATE} IS NULL OR $P{FROM_DATE} = '' OR DATE(order_date) >= $P{FROM_DATE})
+          AND ($P{TO_DATE} IS NULL OR $P{TO_DATE} = '' OR DATE(order_date) <= $P{TO_DATE})
+        GROUP BY DATE_FORMAT(order_date, '%Y-%m-%d')
+        ORDER BY sale_date DESC
+        ]]>
+    </queryString>
+
+    <field name="sale_date" class="java.lang.String"/>
+    <field name="total_orders" class="java.lang.Long"/>
+    <field name="daily_revenue" class="java.math.BigDecimal"/>
+    <field name="avg_order_val" class="java.math.BigDecimal"/>
+
+    <variable name="DAYS_COUNT" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{sale_date}]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_ORDERS_SUM" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{total_orders}]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_REVENUE_SUM" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{daily_revenue}]]></variableExpression>
+    </variable>
+
+    <title>
+        <band height="70">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="58" backcolor="#0F172A"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="58" width="555" height="3" backcolor="#2563EB"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="10" width="340" height="24" forecolor="#FFFFFF"/>
+                <textElement>
+                    <font fontName="SansSerif" size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Apex PC & Tech — Daily Revenue]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="15" y="36" width="300" height="16" forecolor="#93C5FD"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10"/>
+                </textElement>
+                <text><![CDATA[Daily Revenue Breakdown & Average Order Size]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="330" y="36" width="210" height="16" forecolor="#CBD5E1"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Period: " + $P{FROM_DATE} + " to " + $P{TO_DATE}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="25" backcolor="#F1F5F9"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <line>
+                <reportElement x="0" y="24" width="555" height="1" forecolor="#CBD5E1"/>
+            </line>
+            <staticText>
+                <reportElement x="15" y="5" width="120" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="160" y="5" width="80" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Orders Count]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="270" y="5" width="120" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Avg Order Val (Rs.)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="420" y="5" width="120" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Revenue (Rs.)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="15" y="2" width="120" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{sale_date}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="160" y="2" width="80" height="15"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{total_orders}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="270" y="2" width="120" height="15"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{avg_order_val}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="420" y="2" width="120" height="15"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{daily_revenue}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="19" width="555" height="1" forecolor="#E2E8F0"/>
+            </line>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="50">
+            <rectangle>
+                <reportElement x="0" y="10" width="555" height="35" backcolor="#F8FAFC"/>
+                <graphicElement>
+                    <pen lineWidth="1.0" lineColor="#CBD5E1"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="20" width="100" height="16" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Period Totals:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="125" y="20" width="180" height="16" forecolor="#64748B"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Days: " + ($V{DAYS_COUNT} != null ? $V{DAYS_COUNT} : 0) + " | Orders: " + ($V{TOTAL_ORDERS_SUM} != null ? $V{TOTAL_ORDERS_SUM} : 0)]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="315" y="20" width="225" height="16" forecolor="#2563EB"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Period Revenue: Rs. " + ($V{TOTAL_REVENUE_SUM} != null ? String.format("%,.2f", $V{TOTAL_REVENUE_SUM}) : "0.00")]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+</jasperReport>

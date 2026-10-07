@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="inventory_report" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <queryString>
+        <![CDATA[
+        SELECT p.product_id, p.name AS product_name, c.name AS category_name,
+               p.price, p.stock_qty, (p.price * p.stock_qty) AS stock_value
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.category_id
+        ORDER BY c.name, p.name
+        ]]>
+    </queryString>
+
+    <field name="product_id" class="java.lang.Integer"/>
+    <field name="product_name" class="java.lang.String"/>
+    <field name="category_name" class="java.lang.String"/>
+    <field name="price" class="java.math.BigDecimal"/>
+    <field name="stock_qty" class="java.lang.Integer"/>
+    <field name="stock_value" class="java.math.BigDecimal"/>
+
+    <variable name="TOTAL_ITEMS" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{product_id}]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_STOCK_QTY" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA[$F{stock_qty}]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_VALUATION" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{stock_value}]]></variableExpression>
+    </variable>
+
+    <title>
+        <band height="70">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="58" backcolor="#0F172A"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="58" width="555" height="3" backcolor="#2563EB"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="10" width="340" height="24" forecolor="#FFFFFF"/>
+                <textElement>
+                    <font fontName="SansSerif" size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Apex PC & Tech — Inventory Report]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="15" y="36" width="300" height="16" forecolor="#93C5FD"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10"/>
+                </textElement>
+                <text><![CDATA[Hardware Stock Levels & Valuation Status]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy h:mm a">
+                <reportElement x="350" y="36" width="190" height="16" forecolor="#CBD5E1"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="25" backcolor="#F1F5F9"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <line>
+                <reportElement x="0" y="24" width="555" height="1" forecolor="#CBD5E1"/>
+            </line>
+            <staticText>
+                <reportElement x="5" y="5" width="40" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="5" width="180" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Product Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="232" y="5" width="120" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Category]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="355" y="5" width="45" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Stock]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="405" y="5" width="65" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Unit Price]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="475" y="5" width="75" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Value]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="5" y="2" width="40" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="48" y="2" width="180" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="232" y="2" width="120" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{category_name} != null ? $F{category_name} : "General"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="355" y="2" width="45" height="15"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{stock_qty}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="405" y="2" width="65" height="15"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="475" y="2" width="75" height="15"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{stock_value}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="19" width="555" height="1" forecolor="#E2E8F0"/>
+            </line>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="50">
+            <rectangle>
+                <reportElement x="0" y="10" width="555" height="35" backcolor="#F8FAFC"/>
+                <graphicElement>
+                    <pen lineWidth="1.0" lineColor="#CBD5E1"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="20" width="110" height="16" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Inventory Totals:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="130" y="20" width="160" height="16" forecolor="#64748B"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Items: " + ($V{TOTAL_ITEMS} != null ? $V{TOTAL_ITEMS} : 0) + " | Units: " + ($V{TOTAL_STOCK_QTY} != null ? $V{TOTAL_STOCK_QTY} : 0)]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="20" width="240" height="16" forecolor="#2563EB"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Total Valuation: Rs. " + ($V{TOTAL_VALUATION} != null ? String.format("%,.2f", $V{TOTAL_VALUATION}) : "0.00")]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+</jasperReport>

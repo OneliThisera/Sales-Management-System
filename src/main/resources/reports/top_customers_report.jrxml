@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="top_customers_report" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <queryString>
+        <![CDATA[
+        SELECT c.customer_id, c.name AS customer_name, c.email, c.phone,
+               COUNT(so.order_id) AS total_orders, COALESCE(SUM(so.total), 0) AS total_spent
+        FROM customer c
+        JOIN sales_order so ON c.customer_id = so.customer_id
+        WHERE so.status = 'Completed'
+        GROUP BY c.customer_id, c.name, c.email, c.phone
+        ORDER BY total_spent DESC
+        ]]>
+    </queryString>
+
+    <field name="customer_id" class="java.lang.Integer"/>
+    <field name="customer_name" class="java.lang.String"/>
+    <field name="email" class="java.lang.String"/>
+    <field name="phone" class="java.lang.String"/>
+    <field name="total_orders" class="java.lang.Long"/>
+    <field name="total_spent" class="java.math.BigDecimal"/>
+
+    <variable name="GRAND_TOTAL_CUSTOMERS" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{customer_id}]]></variableExpression>
+    </variable>
+    <variable name="GRAND_TOTAL_SPENT" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{total_spent}]]></variableExpression>
+    </variable>
+
+    <title>
+        <band height="70">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="58" backcolor="#0F172A"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="58" width="555" height="3" backcolor="#2563EB"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="10" width="340" height="24" forecolor="#FFFFFF"/>
+                <textElement>
+                    <font fontName="SansSerif" size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Apex PC & Tech — Top Customers]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="15" y="36" width="300" height="16" forecolor="#93C5FD"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10"/>
+                </textElement>
+                <text><![CDATA[VIP Accounts & Customer Lifetime Value Analytics]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy h:mm a">
+                <reportElement x="350" y="36" width="190" height="16" forecolor="#CBD5E1"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="25" backcolor="#F1F5F9"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <line>
+                <reportElement x="0" y="24" width="555" height="1" forecolor="#CBD5E1"/>
+            </line>
+            <staticText>
+                <reportElement x="5" y="5" width="35" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="45" y="5" width="165" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Customer Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="215" y="5" width="145" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Email]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="365" y="5" width="85" height="15" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Phone]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="455" y="5" width="40" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Orders]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="498" y="5" width="52" height="15" forecolor="#0F172A"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total (Rs.)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="5" y="2" width="35" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="45" y="2" width="165" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="215" y="2" width="145" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{email} != null ? $F{email} : "-"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="365" y="2" width="85" height="15"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{phone} != null ? $F{phone} : "-"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="455" y="2" width="40" height="15"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{total_orders}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="498" y="2" width="52" height="15"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{total_spent}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="19" width="555" height="1" forecolor="#E2E8F0"/>
+            </line>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="50">
+            <rectangle>
+                <reportElement x="0" y="10" width="555" height="35" backcolor="#F8FAFC"/>
+                <graphicElement>
+                    <pen lineWidth="1.0" lineColor="#CBD5E1"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="20" width="120" height="16" forecolor="#0F172A"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Customer Totals:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="140" y="20" width="160" height="16" forecolor="#64748B"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Total Active Clients: " + ($V{GRAND_TOTAL_CUSTOMERS} != null ? $V{GRAND_TOTAL_CUSTOMERS} : 0)]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="310" y="20" width="230" height="16" forecolor="#2563EB"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Cumulative Spend: Rs. " + ($V{GRAND_TOTAL_SPENT} != null ? String.format("%,.2f", $V{GRAND_TOTAL_SPENT}) : "0.00")]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+</jasperReport>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="invoice_report" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <parameter name="ORDER_ID" class="java.lang.Integer"/>
+
+    <queryString>
+        <![CDATA[
+        SELECT so.order_id, DATE_FORMAT(so.order_date, '%Y-%m-%d %H:%i') AS order_date, so.status, so.total,
+               c.name AS customer_name, c.email AS customer_email, c.phone AS customer_phone, c.address AS customer_address,
+               e.name AS employee_name,
+               p.name AS product_name, oi.qty, oi.unit_price, oi.subtotal
+        FROM sales_order so
+        JOIN customer c ON so.customer_id = c.customer_id
+        JOIN employee e ON so.employee_id = e.employee_id
+        JOIN order_item oi ON so.order_id = oi.order_id
+        JOIN product p ON oi.product_id = p.product_id
+        WHERE so.order_id = $P{ORDER_ID}
+        ]]>
+    </queryString>
+
+    <field name="order_id" class="java.lang.Integer"/>
+    <field name="order_date" class="java.lang.String"/>
+    <field name="status" class="java.lang.String"/>
+    <field name="total" class="java.math.BigDecimal"/>
+    <field name="customer_name" class="java.lang.String"/>
+    <field name="customer_email" class="java.lang.String"/>
+    <field name="customer_phone" class="java.lang.String"/>
+    <field name="customer_address" class="java.lang.String"/>
+    <field name="employee_name" class="java.lang.String"/>
+    <field name="product_name" class="java.lang.String"/>
+    <field name="qty" class="java.lang.Integer"/>
+    <field name="unit_price" class="java.math.BigDecimal"/>
+    <field name="subtotal" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="150">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="68" backcolor="#0F172A"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <rectangle>
+                <reportElement x="0" y="68" width="555" height="3" backcolor="#2563EB"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="20" y="12" width="240" height="26" forecolor="#FFFFFF"/>
+                <textElement>
+                    <font fontName="SansSerif" size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[APEX PC & TECH INVOICE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="20" y="42" width="260" height="16" forecolor="#93C5FD"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[High-Performance Gaming PCs & Hardware | POS Sales Invoice]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="350" y="15" width="185" height="20" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="13" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["INVOICE #" + $P{ORDER_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="38" width="185" height="16" forecolor="#CBD5E1"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Date: " + $F{order_date}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="20" y="80" width="80" height="14" forecolor="#1E293B"/>
+                <textElement><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Billed To:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="20" y="96" width="220" height="15"/>
+                <textElement><font fontName="SansSerif" size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="20" y="112" width="220" height="14" forecolor="#64748B"/>
+                <textElement><font fontName="SansSerif" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{customer_email} + " | " + $F{customer_phone}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="20" y="126" width="220" height="14" forecolor="#64748B"/>
+                <textElement><font fontName="SansSerif" size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{customer_address}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="350" y="80" width="80" height="14" forecolor="#1E293B"/>
+                <textElement><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Order Details:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="350" y="96" width="185" height="15"/>
+                <textElement><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA["Sales Rep: " + $F{employee_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="112" width="185" height="15"/>
+                <textElement><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA["Status: " + $F{status}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="25" backcolor="#1E293B"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="15" y="5" width="230" height="15" forecolor="#FFFFFF"/>
+                <textElement><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Product Description]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="250" y="5" width="50" height="15" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Qty]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="310" y="5" width="110" height="15" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Unit Price (Rs.)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="430" y="5" width="110" height="15" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Subtotal (Rs.)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="22">
+            <textField>
+                <reportElement x="15" y="3" width="230" height="15"/>
+                <textElement><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="3" width="50" height="15"/>
+                <textElement textAlignment="Center"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="310" y="3" width="110" height="15"/>
+                <textElement textAlignment="Right"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{unit_price}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="430" y="3" width="110" height="15"/>
+                <textElement textAlignment="Right"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="21" width="555" height="1" forecolor="#E2E8F0"/>
+            </line>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="70">
+            <line>
+                <reportElement x="300" y="10" width="245" height="1" forecolor="#CBD5E1"/>
+            </line>
+            <staticText>
+                <reportElement x="310" y="20" width="100" height="20" forecolor="#1E293B"/>
+                <textElement textAlignment="Right"><font fontName="SansSerif" size="12" isBold="true"/></textElement>
+                <text><![CDATA[Grand Total:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="420" y="20" width="120" height="20" forecolor="#2563EB"/>
+                <textElement textAlignment="Right"><font fontName="SansSerif" size="13" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Rs. " + ($F{total} != null ? String.format("%,.2f", $F{total}) : "0.00")]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="20" y="45" width="300" height="15" forecolor="#94A3B8"/>
+                <textElement><font fontName="SansSerif" size="8" isItalic="true"/></textElement>
+                <text><![CDATA[Thank you for your business! This is a computer generated invoice.]]></text>
+            </staticText>
+        </band>
+    </summary>
+
+</jasperReport>

@@ -1,0 +1,45 @@
+# ---- Build Output ----
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# ---- Maven ----
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# ---- IntelliJ IDEA ----
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ---- Eclipse ----
+.classpath
+.project
+.settings/
+bin/
+
+# ---- VS Code ----
+.vscode/
+
+# ---- NetBeans ----
+nbproject/
+nbbuild/
+nbdist/
+nb-configuration.xml
+
+# ---- OS Files ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Crash / JVM logs ----
+hs_err_pid*.log
+replay_pid*.log
+
+# ---- Sensitive config (optional: keep DB config out of git) ----
+# src/main/java/com/sales/util/DBConnection.java

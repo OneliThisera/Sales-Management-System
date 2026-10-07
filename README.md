@@ -7,8 +7,7 @@ A full-featured desktop Sales and Point of Sale (POS) Management System built wi
 
 ## Prerequisites
 
-| Tool | 
-|---|---|
+
 | Java JDK |
 | MySQL Server |
 | NetBeans IDE | 

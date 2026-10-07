@@ -15,41 +15,6 @@ A full-featured desktop Sales and Point of Sale (POS) Management System built wi
 
 ---
 
-## Setup Instructions
-
-### Step 1 — Database Configuration
-
-1. Open MySQL Workbench or any MySQL client
-2. Execute `db/setup.sql` (or `db/seed_apex_data.sql` to populate high-performance hardware inventory and sample sales data)
-
-### Step 2 — Verify Database Connection Settings
-
-Open `src/main/java/com/sales/util/DBConnection.java` to verify credentials:
-Default configuration:
-- Host: `localhost:3306`
-- Database: `sales_db`
-- Username: `root`
-- Password: ``
-
-### Step 3 — Build and Run
-
-Run using Maven or directly from your IDE:
-```bash
-mvn clean compile
-```
-
-Run application:
-```bash
-mvn exec:java -Dexec.mainClass="com.sales.Main"
-```
-
-Or build executable JAR:
-```bash
-mvn clean package
-java -jar target/SalesManagementSystem.jar
-```
-
----
 
 ## User Accounts & Role Permissions
 

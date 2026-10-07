@@ -29,7 +29,7 @@ Default configuration:
 - Host: `localhost:3306`
 - Database: `sales_db`
 - Username: `root`
-- Password: `root123`
+- Password: ``
 
 ### Step 3 — Build and Run
 

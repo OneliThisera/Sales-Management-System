@@ -7,12 +7,12 @@ A full-featured desktop Sales and Point of Sale (POS) Management System built wi
 
 ## Prerequisites
 
-| Tool | Version |
+| Tool | 
 |---|---|
 | Java JDK |
-| MySQL Server | 8.0+ |
-| NetBeans IDE / IntelliJ IDEA | Any modern Java IDE |
-| Apache Maven | 3.6+ |
+| MySQL Server |
+| NetBeans IDE | 
+| Apache Maven | 
 
 ---
 
